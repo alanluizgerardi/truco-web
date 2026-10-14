@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Marque o truco em 1 contra 1, dupla ou trio. Placar, vitórias e histórico salvos no seu navegador.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Truco">
+  <title>Truco · Marcador avulso</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body data-theme="black">
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2.6 7M3 4v7h7M12 7v5l3 2"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M4 5v6h6M4 11c2-7 15-7 15 2 0 5-5 7-10 5"/></symbol>
+    <symbol id="i-cards" viewBox="0 0 24 24"><rect x="8" y="3" width="13" height="18" rx="2"/><path d="M8 6 4 7a2 2 0 0 0-1 2l3 11a2 2 0 0 0 2 1l3-1M14.5 8l3 4-3 4-3-4z"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><path d="M6 21v-4a6 6 0 0 1 12 0v4"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m14 5-7 7 7 7M7 12h14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 3h8v7a4 4 0 0 1-8 0zM8 5H4v3a4 4 0 0 0 4 4M16 5h4v3a4 4 0 0 1-4 4M12 14v6M8 21h8"/></symbol>
+    <symbol id="i-pass" viewBox="0 0 24 24"><path d="M4 15a8 8 0 0 1 14-5M14 10h5V5"/></symbol>
+    <symbol id="i-dealer" viewBox="0 0 24 30"><rect x="1" y="5" width="17" height="24" rx="2" fill="#fff" stroke="#1d2924"/><rect x="4" y="3" width="17" height="24" rx="2" fill="#fff" stroke="#1d2924"/><rect x="7" y="1" width="16" height="23" rx="2" fill="#fff" stroke="#1d2924"/><path d="M15 16c-2-2-5-4-5-6a3 3 0 0 1 5-2 3 3 0 0 1 5 2c0 2-3 4-5 6" fill="#ff6863" stroke="none"/></symbol>
+  </svg>
+  <div class="app-shell">
+    <header class="app-header">
+      <button class="icon-button header-settings" id="settings-button" aria-label="Configurações" title="Configurações"><svg><use href="#i-settings"/></svg></button>
+      <div class="brand"><h1 id="page-title">Sequinha</h1><p id="header-subtitle"><span id="target-label">Até 12 pontos</span></p></div>
+      <nav aria-label="Ações do marcador">
+        <button class="icon-button" id="help-button" aria-label="Abrir tutorial" title="Tutorial"><svg><use href="#i-info"/></svg></button>
+        <button class="icon-button" id="history-button" aria-label="Abrir histórico" title="Histórico"><svg><use href="#i-history"/></svg></button>
+      </nav>
+    </header>
+    <div id="storage-alert" class="storage-alert" role="alert" hidden><span id="storage-message"></span><button class="text-button" id="recovery-button">Reiniciar marcador</button></div>
+    <main id="score-view">
+      <div class="match-meta sr-only"><span id="match-number">Partida 1</span><span id="match-format">Dupla</span></div>
+      <section class="scoreboard" id="scoreboard" aria-label="Placar">
+        <article class="team-score ours"><h2 id="label-ours">Nós</h2><output id="score-ours" aria-label="Pontos de Nós">0</output></article>
+        <article class="team-score theirs"><h2 id="label-theirs">Eles</h2><output id="score-theirs" aria-label="Pontos de Eles">0</output></article>
+      </section>
+      <section class="score-controls" id="score-controls" aria-label="Marcar pontos">
+        <div class="team-controls"><button class="add-button" id="add-ours" aria-label="Adicionar 1 ponto a Nós">+1</button></div>
+        <div class="team-controls"><button class="add-button" id="add-theirs" aria-label="Adicionar 1 ponto a Eles">+1</button></div>
+        <button class="undo-button" id="undo-button" aria-label="Desfazer última jogada"><svg><use href="#i-undo"/></svg><span>Desfazer jogada</span></button>
+      </section>
+      <section class="hand-selector" id="hand-selector" aria-label="Pontos da mão">
+        <h2>Pontos da mão</h2><div class="segments" id="hand-values" role="group" aria-label="Valor da mão"></div>
+      </section>
+      <section class="winner-banner" id="winner-banner" hidden aria-live="polite"><div><span class="eyebrow">Partida encerrada</span><h2 id="winner-label"></h2></div><button class="button positive" id="confirm-button">Confirmar partida <svg><use href="#i-check"/></svg></button></section>
+      <section class="table-panel" aria-label="Mesa e baralho">
+        <div class="table-layout">
+          <div class="series-wins ours" id="wins-group-ours" aria-label="Vitórias de Nós"><svg aria-hidden="true"><use href="#i-trophy"/></svg><output id="wins-ours" aria-label="Vitórias de Nós">0</output><span>vitórias</span></div>
+          <div class="round-table" id="round-table"><div class="table-surface"><button class="icon-button table-settings" id="table-settings-button" aria-label="Configurações da mesa" title="Configurações da mesa"><svg><use href="#i-settings"/></svg></button></div><div id="seats"></div></div>
+          <div class="series-wins theirs" id="wins-group-theirs" aria-label="Vitórias de Eles"><svg aria-hidden="true"><use href="#i-trophy"/></svg><output id="wins-theirs" aria-label="Vitórias de Eles">0</output><span>vitórias</span></div>
+        </div>
+        <button class="button outline pass-button" id="pass-button"><svg><use href="#i-pass"/></svg>Passar o baralho</button>
+      </section>
+    </main>
+    <main id="history-view" hidden>
+      <div class="history-toolbar"><button class="button outline" id="back-button"><svg><use href="#i-back"/></svg>Voltar ao placar</button></div>
+      <section class="history-summary" id="history-summary"></section>
+      <div id="history-games"></div>
+      <footer class="save-status">O histórico é salvo automaticamente neste navegador.</footer>
+    </main>
+  </div>
+  <dialog id="app-dialog" class="app-dialog" aria-labelledby="dialog-title"><form id="dialog-form">
+    <div class="dialog-heading"><h2 id="dialog-title"></h2><button type="button" id="dialog-close" class="icon-button" aria-label="Fechar">×</button></div>
+    <div id="dialog-content" class="dialog-content"></div>
+    <div class="dialog-actions"><button type="button" class="button negative" id="dialog-secondary">Cancelar</button><button type="submit" class="button positive" id="dialog-primary">Confirmar</button></div>
+  </form></dialog>
+  <div id="tutorial-overlay" hidden><div class="tutorial-shade"></div><div id="tutorial-highlight"></div><section class="tutorial-card" role="dialog" aria-modal="true" aria-labelledby="tutorial-title"><div class="tutorial-top"><span id="tutorial-progress"></span><button class="text-button" id="tutorial-skip">Fechar dicas</button></div><h2 id="tutorial-title"></h2><p id="tutorial-message"></p><div class="tutorial-actions"><button class="button negative" id="tutorial-previous">Voltar</button><button class="button positive" id="tutorial-next">Próximo</button></div></section></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <noscript><p class="storage-alert">Ative o JavaScript no Safari para usar o marcador.</p></noscript>
+</body>
+</html>

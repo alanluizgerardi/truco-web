@@ -1,0 +1,12 @@
+{
+  "name": "truco-avulso-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Marcador de truco avulso em HTML, CSS e JavaScript para GitHub Pages.",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check app.js && node --check engine.js && node --check storage.js && node --check tutorial.js && node --check sw.js"
+  }
+}
