@@ -1,0 +1,42 @@
+# This workflow belongs to the standalone repository whose root contains index.html.
+name: Publicar marcador de truco
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Verificar regras e JavaScript
+        run: |
+          npm run check
+          npm test
+      - uses: actions/configure-pages@v5
+      - name: Preparar arquivos públicos
+        run: |
+          mkdir -p _site/assets
+          cp index.html styles.css app.js engine.js storage.js tutorial.js sw.js icon.svg apple-touch-icon.png manifest.webmanifest .nojekyll _site/
+          cp assets/*.png _site/assets/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+          include-hidden-files: true
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
